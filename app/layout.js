@@ -1,7 +1,9 @@
-
+// app/layout.js
 import React from "react";
-import HeaderNavBar from "../components/HeaderNavBar";
+import HeaderNavBar from "@/components/HeaderNavBar";
 import "./globals.css";
+import { UserLocationProvider } from "../context/UserLocationContext"; // Use the provider
+import ClientLayout from "./clientLayout"; // Import ClientLayout
 import Provider from "./Provider";
 
 export const metadata = {
@@ -14,10 +16,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Provider>
+        <UserLocationProvider> {/* Use the provider here */}
           <HeaderNavBar />
+          <ClientLayout /> {/* This runs the client-side logic */}
           {children}
+        </UserLocationProvider>
         </Provider>
-        
       </body>
     </html>
   );
