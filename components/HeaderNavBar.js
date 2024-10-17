@@ -1,35 +1,24 @@
-"use client"
-import { signOut, useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import React from "react";
+'use client';
+import { signOut, useSession } from 'next-auth/react';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 function HeaderNavBar() {
-    const { data: session } = useSession();
-    const [profileClick,setProfileClick]=useState(false);
-
-  useEffect(()=>{
-    setTimeout(()=>{
-      setProfileClick(false)
-    },6000)
-  },[profileClick==true])
+  const { data: session } = useSession();
 
   return (
-    <div className="flex items-centerjustify-between p-2 shadow-md">
-        <div className="flex gap-7 items-center">
-        <Image src='/hikeko_logo.png'
-        alt='logo'
-        width={50}
-        height={50}
-        />
-        <h2>Home</h2>
-        <h2>Profile</h2> 
-        <h2>Logout</h2>
-        </div>
-        <div
-        className=" bg-gray-100 p-[6px] rounded-md
-      w-[40%] gap-3 hidden md:flex"
-      >
+    <div className="flex items-center justify-between p-2 shadow-md">
+      <div className="flex gap-7 items-center">
+        <Image src="/hikeko_logo.png" alt="logo" width={50} height={50} />
+        <h1>Hikeko</h1>
+        <Link href="/">Home</Link>
+        <Link href="/trails">Trails</Link>
+      </div>
+
+      {/* Search bar */}
+      <div className="bg-gray-100 p-[6px] rounded-md w-[40%] gap-3 hidden md:flex">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -47,35 +36,35 @@ function HeaderNavBar() {
         <input
           type="text"
           placeholder="Search"
-          className="bg-transparent 
-        outline-none w-full"
+          className="bg-transparent outline-none w-full"
         />
       </div>
+
       <div>
-        {session?.user ? 
-          <>
-            <Image
-              src={session.user.image}
-              alt="user"
-              width={40}
-              height={40}
-             
-              className="rounded-full cursor-pointer 
-              hover:border-[2px] border-blue-500"
-            />
-            {profileClick? <div className="absolute bg-white p-3
-            shadow-md border-[1px] mt-2 z-30
-            right-4 ">
-              <h2 className="cursor-pointer
-               hover:text-blue-500 hover:font-bold"
-               onClick={()=>signOut()}>Logout</h2>
-            </div>:null}
-           </>
-          :null}
-          
+        {session?.user && (
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Image
+                src={session.user.image}
+                alt="user"
+                width={40}
+                height={40}
+                className="rounded-full cursor-pointer hover:border-[2px] border-blue-500"
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="mt-2 shadow-md">
+              <DropdownMenuItem>
+                <Link href="/accountSettings"> Profile </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOut()}>
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </div>
   );
 }
 
-export default HeaderNavBar
+export default HeaderNavBar;
